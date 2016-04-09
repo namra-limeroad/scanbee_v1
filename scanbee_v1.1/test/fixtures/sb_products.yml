@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  brand: MyString
+  title: MyText
+  content: 1.5
+  content_unit: 1.5
+  cat_name: MyString
+  cat_id: 1
+  item_id: MyString
+  mrp: 1.5
+  cp: 1.5
+
+two:
+  brand: MyString
+  title: MyText
+  content: 1.5
+  content_unit: 1.5
+  cat_name: MyString
+  cat_id: 1
+  item_id: MyString
+  mrp: 1.5
+  cp: 1.5

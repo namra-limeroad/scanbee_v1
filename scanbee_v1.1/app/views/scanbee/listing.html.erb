@@ -1,0 +1,71 @@
+
+<div class="layout">
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+          <%= render "layouts/aside" %>
+          <main class="mdl-layout__content">
+                <div class="page-content">
+                    <div class="row scroll-div up-shadow">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <ul class="demo-list-two mdl-list" id="products-listing">
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12" id="cart_details">
+
+
+                        </div>
+                    </div>
+                    <div class="row footer-btn">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <button class="btn btn-block mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent customer-modal">
+                                <span id="pay_amount">Charge&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;
+
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+  </div>
+<dialog class="mdl-dialog">
+  <div class="mdl-dialog__title cust-modal-title">
+      <small class="pull-right close ft-45">&times;</small>
+  </div>
+  <div class="mdl-dialog__content cust-modal">
+      <br/><br/>
+    <form action="#" style="margin-left:-25px;padding-right:25px;padding-left:25px;">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" pattern="\d*" id="sample4">
+          <label class="mdl-textfield__label text-uppercase" for="sample4"><i class="fa fa-user"></i>
+&nbsp;Cutomer Phone Number</label>
+          <span class="mdl-textfield__error">Incorrect Phone Number</span>
+        </div>
+    </form>
+  </div>
+  <div class="mdl-dialog__actions mdl-dialog__actions--full-width">
+  <button type="button" class="btn btn-block mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent text-center green-btn"
+          onclick="window.location='/scanbee/payment'">Skip</button>
+  </div>
+  <div class="mdl-dialog__actions mdl-dialog__actions--full-width">
+  <button type="submit" class="btn btn-block mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent text-center">Pay</button>
+  </div>
+</dialog>
+<script>
+
+  window.scanbee.init();
+  var dialog = document.querySelector('dialog');
+          var showModalButton = document.querySelector('.customer-modal');
+          if (! dialog.showModal) {
+            dialogPolyfill.registerDialog(dialog);
+          }
+          showModalButton.addEventListener('click', function() {
+            dialog.showModal();
+          });
+          dialog.querySelector('.close').addEventListener('click', function() {
+            dialog.close();
+          });
+</script>
+
