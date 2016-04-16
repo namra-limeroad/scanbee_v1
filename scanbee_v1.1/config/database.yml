@@ -15,7 +15,8 @@ default: &default
   pool: 5
   username: root
   password: root
-  socket: /tmp/mysql.sock
+#  socket: /tmp/mysql.sock
+  socket: /var/run/mysqld/mysqld.sock
 
 development:
   <<: *default
@@ -56,7 +57,7 @@ test:
 production:
   <<: *default
   database: scanbee_v1_1_production
-  username: root
-  password: root
+#  username: root
+#  password: root
   host: localhost
 
