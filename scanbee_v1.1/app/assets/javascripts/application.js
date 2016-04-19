@@ -13,7 +13,4 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require material
-//= require bootstrap.min
-//= require scanbee
 //= require_tree .

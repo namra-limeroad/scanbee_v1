@@ -4,7 +4,7 @@ module VendorStoreHelper
         "timestamp" => "2016-04-12 23:09:11",
         "barcode_data" => ["13095949", "57840055", "91749284", "84865601"],
         "quant_array" => [2, 4, 3, 4],
-        "machine_id" => "223345"
+        "machine_id" => "21"
     }
     return dummy_order
   end

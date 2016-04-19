@@ -41,3 +41,4 @@ en:
   order_status_cart: "3"
   order_status_payment: "4"
   update_status_400: "Either of order id or order status is not present"
+  products_csv: './cooked/product_sku.csv'
