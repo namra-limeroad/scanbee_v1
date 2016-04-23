@@ -6,6 +6,19 @@ module MasterStoreHelper
     prod_hash
   end
 
+  # Mersenne Primes
+  def self.obfuscate_using_xor number
+    key = 131071
+    obfuscate = number ^ key
+    return obfuscate
+  end
+
+  def self.restore_using_xor number
+    key = 131071
+    restore = number.to_i ^ key
+    return restore
+  end
+
   def self.bulk_products_loader
     products_load_status = []
     prod_hash = csv_to_hasharray
@@ -20,6 +33,7 @@ module MasterStoreHelper
     end
     return products_load_status
   end
+
 end
 
 

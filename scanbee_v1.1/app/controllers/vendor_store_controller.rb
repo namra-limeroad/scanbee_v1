@@ -1,5 +1,7 @@
 class VendorStoreController < ApplicationController
 
+  before_action :sb_authenticate
+
   def generate_dummy_order
     status  = 200
     message = I18n.t 'msg_200'

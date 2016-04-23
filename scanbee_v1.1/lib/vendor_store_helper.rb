@@ -18,11 +18,14 @@ module VendorStoreHelper
   end
 
   def self.generate_order_id timestamp,machine_id,barcode_data, quant_array
-    return SbOrder.create_order_id timestamp, machine_id,barcode_data,quant_array
+    orderid = SbOrder.create_order_id timestamp, machine_id,barcode_data,quant_array
+    obf_orderid = MasterStoreHelper.obfuscate_using_xor orderid
+    return obf_orderid
   end
 
   def self.get_order_data orderid
-    prod_array_data = SbOrder.get_prod_data orderid
+    res_orderid = MasterStoreHelper.restore_using_xor orderid
+    prod_array_data = SbOrder.get_prod_data res_orderid
     prod_array = JSON.parse prod_array_data['prod_array']
     quant_array = JSON.parse prod_array_data['quant_array']
     prod_data = SbProduct.get_prod_by_itemid prod_array
@@ -33,12 +36,13 @@ module VendorStoreHelper
   end
 
   def self.update_order orderid, order_data
-    update_flag  = SbOrder.update_order orderid, order_data["timestamp"], order_data["machine_id"], order_data["barcode_data"], order_data["quant_array"]
-    upadte_order_data = []
-    if update_flag and order_data["barcode_data"] == order_data["quant_array"]
-      upadte_order_data = get_order_data orderid
+    res_orderid = MasterStoreHelper.restore_using_xor orderid
+    update_flag  = SbOrder.update_order res_orderid, order_data["timestamp"], order_data["machine_id"], order_data["barcode_data"], order_data["quant_array"]
+    update_order_data = []
+    if update_flag and order_data["barcode_data"].length == order_data["quant_array"].length
+      update_order_data = get_order_data orderid
     end
-    return upadte_order_data
+    return update_order_data
   end
 
   def self.get_cart_data price_array, quant_array
@@ -60,12 +64,14 @@ module VendorStoreHelper
     return customer_data
   end
 
-  def self.generate_payment_data payment_type, cust_id, order_id, amount_paid
-    return SbPayment.create_new_payment payment_type, cust_id, order_id, amount_paid
+  def self.generate_payment_data payment_type, cust_id, orderid, amount_paid
+    res_orderid = MasterStoreHelper.restore_using_xor orderid
+    return SbPayment.create_new_payment payment_type, cust_id, res_orderid, amount_paid
   end
 
   def self.update_order_status orderid, order_status
-    return SbOrder.update_order_status orderid,order_status
+    res_orderid = MasterStoreHelper.restore_using_xor orderid
+    return SbOrder.update_order_status res_orderid,order_status
   end
 end
 
