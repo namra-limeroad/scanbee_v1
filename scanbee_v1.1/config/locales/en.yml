@@ -44,6 +44,6 @@ en:
   update_status_400: "Either of order id or order status is not present"
   user_auth_402: "Unauthorized User"
   user_auth_400: "Either username or password is not present"
-  user_wrong_cred: "Either username or password is incorrect else auth token is expired"
+  user_wrong_cred: "Either username or password is incorrect"
   products_csv: "./cooked/product_sku.csv"
   token_400: "Token not present in HTTP request, Check header"

@@ -1,6 +1,6 @@
 class VendorStoreController < ApplicationController
 
-  before_action :sb_authenticate
+  # before_action :sb_authenticate
 
   def generate_dummy_order
     status  = 200
@@ -48,7 +48,7 @@ class VendorStoreController < ApplicationController
       order_id = VendorStoreHelper.generate_order_id(timestamp,machine_id,barcode_data,quant_array)
     end
     status_hash = VendorStoreHelper.generate_status_msg(status,message)
-    render :json => status_hash.merge({"order_id" => order_id}) and return
+    render :json => status_hash.merge({"order_data" => order_id}) and return
   end
 
   def get_order_data

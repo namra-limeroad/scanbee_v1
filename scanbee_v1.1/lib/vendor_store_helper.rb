@@ -19,8 +19,10 @@ module VendorStoreHelper
 
   def self.generate_order_id timestamp,machine_id,barcode_data, quant_array
     orderid = SbOrder.create_order_id timestamp, machine_id,barcode_data,quant_array
+    quantity = quant_array.inject(0){|quantity,x| quantity + x }
     obf_orderid = MasterStoreHelper.obfuscate_using_xor orderid
-    return obf_orderid
+    order_data = {"orderid" => obf_orderid, "quantity" => quantity}
+    return order_data
   end
 
   def self.get_order_data orderid
@@ -31,6 +33,9 @@ module VendorStoreHelper
     prod_data = SbProduct.get_prod_by_itemid prod_array
     price_array = prod_data.map{|x| x[:mrp]}
     cart_data = get_cart_data quant_array,price_array
+    for q in 0..(quant_array.length()-1)
+      prod_data[q][:quantity] = quant_array[q]
+    end
     order_data = {"cart_data" => cart_data, "prod_data" => prod_data}
     return order_data
   end
@@ -46,15 +51,15 @@ module VendorStoreHelper
   end
 
   def self.get_cart_data price_array, quant_array
-    cart_value = 0
+    cart_value = 0.0
     price_array.zip(quant_array).each do |product|
       cart_value = cart_value + (product[0].to_f * product[1])
     end
     cart_details ={
-        "amount_charge" => -1,
+        "amount_charge" => "0.0",
         "cart_value" => cart_value,
-        "discount" => -1,
-        "tax" => -1
+        "discount" => "0.0",
+        "tax" => "0.0"
     }
     return cart_details
   end

@@ -22,21 +22,18 @@ class SbUser < ActiveRecord::Base
     return flag
   end
 
-  def self.get_user_by_auth auth_token
-    user = SbUser.where(:auth_token => auth_token).select(:id,:name,:email,:ph_number).first
-    return user
-  end
   def self.get_user_by_unp username, password
-    user = SbUser.where(:email => username, :password => password).first
-    auth_token = nil
+    user = SbUser.where(:email => username, :password => password).select(:id,:name,:email,:ph_number).first
+    user_data = nil
     if user.present?
       token = generate_authentication_token
       token_flag = change_authentication_token user['id'], token
       if(token_flag)
-        auth_token = token
+        user_data = user
+        user_data['auth_token'] = token
       end
     end
-    return auth_token
+    return user_data
   end
 
   def self.destroy_authentication_token token

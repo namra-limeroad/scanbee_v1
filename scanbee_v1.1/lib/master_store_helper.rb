@@ -10,13 +10,13 @@ module MasterStoreHelper
   def self.obfuscate_using_xor number
     key = 131071
     obfuscate = number ^ key
-    return obfuscate
+    return number
   end
 
   def self.restore_using_xor number
     key = 131071
     restore = number.to_i ^ key
-    return restore
+    return number
   end
 
   def self.bulk_products_loader
