@@ -11,3 +11,9 @@
 /log/*
 !/log/.keep
 /tmp
+.DS_Store 
+.idea/ 
+Gemfile.lock 
+db/schema.rb 
+public/assets/  
+test/

@@ -11,6 +11,7 @@ class SbProduct < ActiveRecord::Base
         item_id:prod[:item_id],
         mrp:prod[:mrp],
         cp:prod[:cp],
+        tax_n_disc:prod[:tax_n_disc],
         created_at: Time.now,
         updated_at: Time.now
     )
@@ -23,7 +24,7 @@ class SbProduct < ActiveRecord::Base
   end
 
   def self.get_prod_by_itemid itemid_array
-    products = SbProduct.where(:item_id => itemid_array)
+    products = SbProduct.where(:item_id => itemid_array).order("field(item_id, #{itemid_array.join(',')})")
     return products
   end
 

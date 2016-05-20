@@ -32,7 +32,8 @@ module VendorStoreHelper
     quant_array = JSON.parse prod_array_data['quant_array']
     prod_data = SbProduct.get_prod_by_itemid prod_array
     price_array = prod_data.map{|x| x[:mrp]}
-    cart_data = get_cart_data quant_array,price_array
+    tax_n_disc_array =  prod_data.map{|x| x[:tax_n_disc]}
+    cart_data = get_cart_data quant_array,price_array,tax_n_disc_array
     for q in 0..(quant_array.length()-1)
       prod_data[q][:quantity] = quant_array[q]
     end
@@ -50,18 +51,46 @@ module VendorStoreHelper
     return update_order_data
   end
 
-  def self.get_cart_data price_array, quant_array
+  def self.get_cart_data price_array, quant_array, tax_n_disc_array
     cart_value = 0.0
-    price_array.zip(quant_array).each do |product|
-      cart_value = cart_value + (product[0].to_f * product[1])
+    tax = 0.0
+    discount = 0.0
+    tax_n_disc_data = get_tax_n_disc_data tax_n_disc_array
+    price_array.zip(quant_array,tax_n_disc_array).each do |product|
+      total_cost = product[0].to_f * product[1]
+      tax_csv = product[2]
+      temp_array  = tax_csv.split(';')
+      temp_array.each do |tndval|
+        tnddata = tax_n_disc_data[tndval.to_i]
+        if tnddata['value_type'] == 1
+          tax = tax + (tnddata['percent'].to_f * total_cost * 0.01)
+        else
+          discount = discount + (tnddata['percent'].to_f * total_cost * 0.01)
+        end
+      end
+      cart_value = cart_value + total_cost
     end
-    cart_details ={
-        "amount_charge" => "0.0",
-        "cart_value" => cart_value,
-        "discount" => "0.0",
-        "tax" => "0.0"
+    amount_charge = cart_value + tax - discount
+    cart_details = {
+        "amount_charge" => amount_charge.round(2),
+        "cart_value" => cart_value.round(2),
+        "discount" => discount.round(2),
+        "tax" => tax.round(2)
     }
     return cart_details
+  end
+
+  def self.get_tax_n_disc_data tax_n_disc_array
+    temp_array = []
+    tax_n_disc_array.each do |tndval|
+      temp_array = temp_array | tndval.split(';')
+    end
+    tax_n_disc_data = SbTaxNDiscount.get_tax_n_disc_by_id temp_array
+    tax_n_disc_hash = {}
+    tax_n_disc_data.each do |tnddata|
+      tax_n_disc_hash[tnddata['id']] = tnddata
+    end
+    return tax_n_disc_hash
   end
 
   def self.get_customer_data phone

@@ -3,7 +3,7 @@ module MasterStoreHelper
   def self.csv_to_hasharray
     file_name = I18n.t 'products_csv'
     prod_hash = SmarterCSV.process(file_name, {:col_sep => ",", :row_sep => "\n"})
-    prod_hash
+    return prod_hash
   end
 
   # Mersenne Primes
