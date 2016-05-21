@@ -1,9 +1,13 @@
 module VendorStoreHelper
   def self.generate_dummy_order
+    time_utc = String(Time.now.getutc)
+    non_zoned_time = time_utc.split('U')[0][0..-2]
+    quantity  =  rand(3..15)
+    prod_list = ["13095949", "94516487", "84865601", "24061223", "57840055", "95786650", "91749284"]
+    prod_array = Array.new(quantity){prod_list.sample}
     dummy_order = {
-        "timestamp" => "2016-04-12 23:09:11",
-        "barcode_data" => ["13095949", "57840055", "91749284", "84865601"],
-        "quant_array" => [2, 4, 3, 4],
+        "timestamp" => non_zoned_time,
+        "barcode_data" => prod_array,
         "machine_id" => "21"
     }
     return dummy_order
@@ -64,7 +68,7 @@ module VendorStoreHelper
         tnddata = tax_n_disc_data[tndval.to_i]
         if tnddata['value_type'] == 1
           tax = tax + (tnddata['percent'].to_f * total_cost * 0.01)
-        else
+        elsif tnddata['value_type'] == 2
           discount = discount + (tnddata['percent'].to_f * total_cost * 0.01)
         end
       end
@@ -73,9 +77,9 @@ module VendorStoreHelper
     amount_charge = cart_value + tax - discount
     cart_details = {
         "amount_charge" => amount_charge.round(2),
-        "cart_value" => cart_value.round(2),
-        "discount" => discount.round(2),
-        "tax" => tax.round(2)
+        "cart_value" => cart_value.round(1),
+        "discount" => discount.round(1),
+        "tax" => tax.round(1)
     }
     return cart_details
   end
