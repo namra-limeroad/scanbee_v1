@@ -23,7 +23,7 @@ class SbUser < ActiveRecord::Base
   end
 
   def self.get_user_by_unp username, password
-    user = SbUser.where(:email => username, :password => password).select(:id,:name,:email,:ph_number).first
+    user = SbUser.where(:email => username, :password => password).select(:id,:name,:permission,:email,:ph_number).first
     user_data = nil
     if user.present?
       token = generate_authentication_token

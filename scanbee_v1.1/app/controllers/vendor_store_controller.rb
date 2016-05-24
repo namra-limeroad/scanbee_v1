@@ -85,18 +85,22 @@ class VendorStoreController < ApplicationController
     cust_id = params[:cust_id]
     order_id = params[:order_id]
     amount_paid = params[:amount_paid]
+    gateway_data = params[:gateway_data]
     payment_id = nil
     if !payment_type.present? or !cust_id.present? or !amount_paid.present? or !order_id.present?
       status = 400
       message = I18n.t 'payment_id_400'
+    elsif !gateway_data.present?
+      status = 400
+      message = I18n.t 'gateway_id_400'
     else
-      payment_id = VendorStoreHelper.generate_payment_data payment_type, cust_id, order_id, amount_paid
+      payment_id = VendorStoreHelper.generate_payment_data payment_type, cust_id, order_id, amount_paid,gateway_data
     end
     status_hash = VendorStoreHelper.generate_status_msg(status,message)
     render :json => status_hash.merge({"payment_id" => payment_id}) and return
   end
 
-  def add_prod_to_order
+  def update_order
     status  = 200
     message = I18n.t 'msg_200'
     orderid = params[:orderid]
@@ -116,30 +120,7 @@ class VendorStoreController < ApplicationController
       end
     end
     status_hash = VendorStoreHelper.generate_status_msg(status,message)
-    render :json => status_hash.merge({"updated_order" => updated_order}) and return
-  end
-
-  def delete_prod_from_order
-    status  = 200
-    message = I18n.t 'msg_200'
-    orderid = params[:orderid]
-    order_data = params[:order_data]
-    if !orderid.present? or !order_data.present?
-      status = 400
-      message = I18n.t 'add_prod_400'
-    else
-      updated_order = VendorStoreHelper.update_order(orderid,order_data)
-      if order_data['quant_array'].size != order_data['barcode_data'].size
-        status = 400
-        message = I18n.t 'quant_prod_mismatch'
-        updated_order = nil
-      elsif  updated_order.empty?
-        status = 400
-        message = I18n.t 'del_prod_no_data'
-      end
-    end
-    status_hash = VendorStoreHelper.generate_status_msg(status,message)
-    render :json => status_hash.merge({"updated_order" => updated_order}) and return
+    render :json => status_hash.merge({"order_data" => updated_order}) and return
   end
 
   def update_order_status

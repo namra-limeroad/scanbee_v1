@@ -33,6 +33,7 @@ en:
   payment_type_card: "2"
   payment_type_credit: "3"
   payment_id_400: "Either  payment type, customer id, order id or amount paid is not present"
+  gateway_id_400: "Gateway is not present"
   add_prod_400: "Either of order id or order data is not present"
   add_prod_no_data: "Add product not successful"
   del_prod_no_data: "Delete product not successful"

@@ -76,6 +76,7 @@ module VendorStoreHelper
     end
     amount_charge = cart_value + tax - discount
     cart_details = {
+        "tax_array" => tax_n_disc_data,
         "amount_charge" => amount_charge.round(2),
         "cart_value" => cart_value.round(1),
         "discount" => discount.round(1),
@@ -102,9 +103,8 @@ module VendorStoreHelper
     return customer_data
   end
 
-  def self.generate_payment_data payment_type, cust_id, orderid, amount_paid
-    res_orderid = MasterStoreHelper.restore_using_xor orderid
-    return SbPayment.create_new_payment payment_type, cust_id, res_orderid, amount_paid
+  def self.generate_payment_data payment_type, cust_id, orderid, amount_paid,gateway_data
+    return SbPayment.create_new_payment payment_type, cust_id, orderid, amount_paid,gateway_data['status'],gateway_data['message'],gateway_data['id'],gateway_data['amount']
   end
 
   def self.update_order_status orderid, order_status
